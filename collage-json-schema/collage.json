@@ -1,0 +1,104 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://github.com/luphord/scratchpad/collage-json-schema/collage.json",
+    "definitions": {
+        "layout_leaf": {
+            "type": "object",
+            "properties": {
+                "kind": {
+                    "type": "string",
+                    "enum": [
+                        "leaf"
+                    ]
+                },
+                "image": {
+                    "type": "string",
+                    "format": "uri-reference"
+                }
+            }
+        },
+        "layout_row": {
+            "type": "object",
+            "properties": {
+                "kind": {
+                    "type": "string",
+                    "enum": [
+                        "row"
+                    ]
+                },
+                "content": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#weighted_layout_node"
+                    }
+                }
+            }
+        },
+        "layout_column": {
+            "type": "object",
+            "properties": {
+                "kind": {
+                    "type": "string",
+                    "enum": [
+                        "row"
+                    ]
+                },
+                "content": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#weighted_layout_node"
+                    }
+                }
+            }
+        },
+        "layout_node": {
+            "anyOf": [
+                {
+                    "$ref": "#layout_leaf"
+                },
+                {
+                    "$ref": "#layout_row"
+                },
+                {
+                    "$ref": "#layout_column"
+                }
+            ]
+        },
+        "weighted_layout_node": {
+            "type": "object",
+            "properties": {
+                "weight": {
+                    "type": "number"
+                },
+                "node": {
+                    "$ref": "#layout_node"
+                }
+            }
+        }
+    },
+    "title": "Collage",
+    "type": "object",
+    "required": [
+        "width",
+        "height",
+        "layout"
+    ],
+    "properties": {
+        "width": {
+            "type": "integer",
+            "title": "Width",
+            "description": "Width of image in pixels",
+            "default": 1920
+        },
+        "height": {
+            "type": "integer",
+            "title": "Height",
+            "description": "Height of image in pixels",
+            "default": 1080
+        },
+        "content": {
+            "title": "Content",
+            "$ref": "#layout_node"
+        }
+    }
+}
