@@ -12,7 +12,8 @@ drawing = svgwrite.Drawing(
     filename="rotating_squares.svg", debug=True, size=(width, height)
 )
 
-color1 = (80, 140, 200)
+# color1 = (80, 140, 200) # light blue
+color1 = (82, 119, 46) # desaturated green
 color2 = (190, 190, 190)
 
 for i in range(2000):
