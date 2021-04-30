@@ -1,4 +1,5 @@
 from typing import Mapping, Iterable, TypeVar
+from collections import defaultdict
 
 
 T = TypeVar("T")
@@ -9,14 +10,25 @@ def invert_dag(dag: Mapping[T, Iterable[T]]) -> Mapping[T, Iterable[T]]:
     or vice versa.
 
     >>> invert_dag({1: [2, 3], 2: [3]})
-    {2: set([1]), 3: set([1, 2])}
-    >>> invert_dag({"a": ["b", "c"], "b": ["c", "d"], "c": ["d"]})
-    {"d": set(["b", "c"]), "c": set(["b", "a"]), "b": set(["a"])}
+    {2: {1}, 3: {1, 2}}
+    >>> invert_dag({"a": ["b", "c"], "b": ["c", "d"], "c": ["d"]}) \
+        == {"d": {"b", "c"}, "c": {"b", "a"}, "b": {"a"}}
+    True
     >>> invert_dag({1: []})
-    {1: set([])}
+    {1: set()}
     >>> invert_dag({})
     {}
     """
+    inv = defaultdict(set)
+    for k, v in dag.items():
+        if v:
+            for node in v:
+                inv[node].add(k)
+        else:
+            # k has not precedents (or dependents)
+            # we have to ensure it does not get lost
+            inv[k]
+    return dict(inv)
 
 
 def topological_sort(dag: Mapping[T, Iterable[T]]) -> Iterable[T]:
