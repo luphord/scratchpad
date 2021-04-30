@@ -51,7 +51,7 @@ def topological_sort(dag: Mapping[T, Iterable[T]]) -> Iterable[T]:
     []
     """
     dag = invert_dag(dag)
-    s = dag.keys() - set.union(*dag.values())
+    s = dag.keys() - set.union(*(dag.values() or [set()]))
     s.update({k for k, v in dag.items() if not v})
     while s:
         node = s.pop()
