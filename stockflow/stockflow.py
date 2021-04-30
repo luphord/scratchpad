@@ -1,11 +1,11 @@
-from typing import Mapping, Iterable, TypeVar
+from typing import Mapping, Iterable, TypeVar, Dict, Set
 from collections import defaultdict
 
 
 T = TypeVar("T")
 
 
-def invert_dag(dag: Mapping[T, Iterable[T]]) -> Mapping[T, Iterable[T]]:
+def invert_dag(dag: Mapping[T, Iterable[T]]) -> Dict[T, Set[T]]:
     """Invert DAG representation from precedents to dependents
     or vice versa.
 
