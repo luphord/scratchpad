@@ -4,6 +4,21 @@ from typing import Mapping, Iterable, TypeVar
 T = TypeVar("T")
 
 
+def invert_dag(dag: Mapping[T, Iterable[T]]) -> Mapping[T, Iterable[T]]:
+    """Invert DAG representation from precedents to dependents
+    or vice versa.
+
+    >>> invert_dag({1: [2, 3], 2: [3]})
+    {2: set([1]), 3: set([1, 2])}
+    >>> invert_dag({"a": ["b", "c"], "b": ["c", "d"], "c": ["d"]})
+    {"d": set(["b", "c"]), "c": set(["b", "a"]), "b": set(["a"])}
+    >>> invert_dag({1: []})
+    {1: set([])}
+    >>> invert_dag({})
+    {}
+    """
+
+
 def topological_sort(dag: Mapping[T, Iterable[T]]) -> Iterable[T]:
     """Perform topological sorting by Kahn's algorithm (see
     https://en.wikipedia.org/wiki/Topological_sorting#Kahn.27s_algorithm).
