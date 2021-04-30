@@ -45,6 +45,10 @@ def topological_sort(dag: Mapping[T, Iterable[T]]) -> Iterable[T]:
     >>> d2 = {"a": ["b", "c"], "b": ["c", "d"], "c": ["d"]}
     >>> list(topological_sort(d2)) == list("dcba")
     True
+    >>> list(topological_sort({1: []}))
+    [1]
+    >>> list(topological_sort({}))
+    []
     """
     dag = invert_dag(dag)
     s = dag.keys() - set.union(*dag.values())
