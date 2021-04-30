@@ -43,10 +43,20 @@ def topological_sort(dag: Mapping[T, Iterable[T]]) -> Iterable[T]:
     >>> list(topological_sort(d1))
     [3, 2, 1]
     >>> d2 = {"a": ["b", "c"], "b": ["c", "d"], "c": ["d"]}
-    >>> list(topological_sort(d2))
-    "dcba".split()
+    >>> list(topological_sort(d2)) == list("dcba")
+    True
     """
-    return []
+    dag = invert_dag(dag)
+    s = dag.keys() - set.union(*dag.values())
+    s.update({k for k, v in dag.items() if not v})
+    while s:
+        node = s.pop()
+        yield node
+        node_dependents = dag.pop(node, set())
+        remaining = set.union(*(dag.values() or [set()]))
+        s.update(node_dependents - remaining)
+    if dag:
+        raise ValueError(f"DAG contains a cycle related to {dag}")
 
 
 if __name__ == "__main__":
