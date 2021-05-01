@@ -68,6 +68,25 @@ def topological_sort(dag: Mapping[T, Iterable[T]]) -> Iterable[T]:
 class Expression(ABC):
     """Abstract base class for all types of expressions including nodes."""
 
+    @staticmethod
+    def wrap(o: Union[Number, "Expression"]) -> "Expression":
+        """Wrap a numeric value as a constant expression.
+        Return the expression itself if it is already an instance of Expression
+
+        >>> Expression.wrap(1)
+        Constant(1)
+        >>> Expression.wrap(1.23)
+        Constant(1.23)
+        >>> Expression.wrap(Constant(5))
+        Constant(5)
+        """
+        if isinstance(o, Expression):
+            return o
+        elif isinstance(o, Number):
+            return Constant(o)
+        else:
+            raise TypeError(f"Cannot wrap '{o}' of type {type(o)} as expression")
+
     @property
     @abstractmethod
     def dependencies(self) -> Iterable["Expression"]:
@@ -104,6 +123,9 @@ class Constant(NonNode):
 
     def __init__(self, constant: Number):
         self.constant = constant
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self.constant})"
 
     @property
     def dependencies(self) -> Iterable["Expression"]:
