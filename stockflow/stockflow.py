@@ -181,10 +181,17 @@ class Stock(Node):
 
     >>> Stock()
     Stock()
+    >>> Stock("test")
+    Stock('test')
+    >>> Stock(label="test")
+    Stock('test')
     """
 
+    def __init__(self, label: str = None):
+        self.label = label
+
     def __repr__(self):
-        return f"{self.__class__.__name__}()"
+        return f"{self.__class__.__name__}({repr(self.label) if self.label else ''})"
 
     @property
     def dependencies_resolving_self(self) -> Iterable["Expression"]:
