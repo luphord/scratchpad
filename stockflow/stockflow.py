@@ -113,6 +113,16 @@ class Expression(ABC):
         """
         return Sum(self, other)
 
+    def __radd__(self, other: ExpressionLike) -> "Expression":
+        """Add other expression-like to self.
+
+        >>> 1 + Constant(2)
+        Sum(Constant(1), Constant(2))
+        >>> 1 + Constant(2) + 3
+        Sum(Constant(1), Constant(2), Constant(3))
+        """
+        return Sum(other, self)
+
     def __neg__(self) -> "Expression":
         """Negative value of the given expression.
 
