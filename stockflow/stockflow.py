@@ -103,6 +103,14 @@ class Expression(ABC):
     def evaluate(self, context: Mapping["Node", float]) -> float:
         pass
 
+    def __add__(self, other: ExpressionLike) -> "Expression":
+        """Add other expression-like to self.
+
+        >>> Constant(1) + 2
+        Sum(Constant(1), Constant(2))
+        """
+        return Sum(self, other)
+
     def __neg__(self) -> "Expression":
         """Negative value of the given expression.
 
@@ -143,6 +151,25 @@ class Constant(NonNode):
 
     def evaluate(self, context: Mapping["Node", float]) -> float:
         return self.constant
+
+
+class Sum(NonNode):
+    """Sum of multiple expressions."""
+
+    def __init__(self, *summands):
+        self.summands = [Expression.wrap(summand) for summand in summands]
+
+    def __repr__(self):
+        args = ", ".join(repr(summand) for summand in self.summands)
+        return f"{self.__class__.__name__}({args})"
+
+    @property
+    def dependencies(self) -> Iterable["Expression"]:
+        for summand in self.summands:
+            yield from summand.dependencies
+
+    def evaluate(self, context: Mapping["Node", float]) -> float:
+        return float(sum(summand.evaluate(context) for summand in self.summands))
 
 
 class NegativeOf(NonNode):
