@@ -108,6 +108,8 @@ class Expression(ABC):
 
         >>> Constant(1) + 2
         Sum(Constant(1), Constant(2))
+        >>> Constant(1) + 2 + 3
+        Sum(Constant(1), Constant(2), Constant(3))
         """
         return Sum(self, other)
 
@@ -157,7 +159,10 @@ class Sum(NonNode):
     """Sum of multiple expressions."""
 
     def __init__(self, *summands):
-        self.summands = [Expression.wrap(summand) for summand in summands]
+        summands = [Expression.wrap(summand) for summand in summands]
+        self.summands = sum(
+            (s.summands if isinstance(s, Sum) else [s] for s in summands), []
+        )
 
     def __repr__(self):
         args = ", ".join(repr(summand) for summand in self.summands)
