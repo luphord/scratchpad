@@ -101,6 +101,11 @@ class Expression(ABC):
 
     @abstractmethod
     def evaluate(self, context: Mapping["Node", float]) -> float:
+        """Evaluate expression in context.
+
+        >>> float((1 + Constant(2) - 3).evaluate({}))
+        0.0
+        """
         pass
 
     def __add__(self, other: ExpressionLike) -> "Expression":
