@@ -1,5 +1,6 @@
 from typing import Mapping, Iterable, TypeVar, Dict, Set
 from collections import defaultdict
+from abc import ABC, abstractmethod
 
 
 T = TypeVar("T")
@@ -61,6 +62,40 @@ def topological_sort(dag: Mapping[T, Iterable[T]]) -> Iterable[T]:
         s.update(node_dependents - remaining)
     if dag:
         raise ValueError(f"DAG contains a cycle related to {dag}")
+
+
+class Expression(ABC):
+    """Abstract base class for all types of expressions including nodes."""
+
+    @property
+    @abstractmethod
+    def dependencies(self) -> Iterable["Expression"]:
+        pass
+
+    @property
+    @abstractmethod
+    def dependencies_resolving_self(self) -> Iterable["Expression"]:
+        pass
+
+    @abstractmethod
+    def evaluate(self, context: Mapping["Node", float]) -> float:
+        pass
+
+
+class Node(Expression):
+    """Abstract base class for all nodes."""
+
+    @property
+    def dependencies(self) -> Iterable["Expression"]:
+        yield self
+
+
+class NonNode(Expression):
+    """Abstract base class for all non-node expressions."""
+
+    @property
+    def dependencies_resolving_self(self) -> Iterable["Expression"]:
+        return self.dependencies
 
 
 if __name__ == "__main__":
