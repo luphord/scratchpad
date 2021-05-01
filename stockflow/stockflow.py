@@ -203,6 +203,39 @@ class Stock(Node):
         return context[self]
 
 
+class Flow(Node):
+    """Flow from one Stock to another. Adds up to first derivative of Stock.
+
+    >>> Flow()
+    Flow(None, None, None, Constant(0))
+    >>> Flow("flow", Stock("one"), Stock("two"), Constant(1) + 2)
+    Flow('flow', Stock('one'), Stock('two'), Sum(Constant(1), Constant(2)))
+    """
+
+    def __init__(
+        self,
+        label: str = None,
+        source: Node = None,
+        sink: Node = None,
+        value: ExpressionLike = 0,
+    ):
+        self.label = label
+        self.source = source
+        self.sink = sink
+        self.value = Expression.wrap(value)
+
+    def __repr__(self):
+        args = [repr(self.label), repr(self.source), repr(self.sink), repr(self.value)]
+        return f"{self.__class__.__name__}({', '.join(args)})"
+
+    @property
+    def dependencies_resolving_self(self) -> Iterable["Expression"]:
+        return self.value.dependencies
+
+    def evaluate(self, context: Mapping["Node", float]) -> float:
+        return self.value.evaluate(context)
+
+
 class NonNode(Expression):
     """Abstract base class for all non-node expressions."""
 
