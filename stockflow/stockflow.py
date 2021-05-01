@@ -92,6 +92,11 @@ class Expression(ABC):
     @property
     @abstractmethod
     def dependencies(self) -> Iterable["Expression"]:
+        """Nodes that this expression depends on.
+
+        >>> list((1 + Constant(2) - 3).dependencies)
+        []
+        """
         pass
 
     @property
