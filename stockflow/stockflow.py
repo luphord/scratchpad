@@ -335,6 +335,20 @@ class Model:
         self.flows.append(flow)
         return flow
 
+    @property
+    def evaluation_order(self) -> Iterable[Node]:
+        """Determine an order of evaluations implied by node dependency structure.
+
+        >>> m = Model()
+        >>> f1 = m.flow(None, None, None, Constant(1))
+        >>> f2 = m.flow(None, None, None, f1 + 2)
+        >>> f3 = m.flow(None, None, None, f1 + f2)
+        >>> list(m.evaluation_order) == [f1, f2, f3]
+        True
+        """
+        deps = {node: node.dependencies_resolving_self for node in self.flows}
+        yield from topological_sort(deps)
+
 
 if __name__ == "__main__":
     import doctest
