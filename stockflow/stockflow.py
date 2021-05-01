@@ -300,6 +300,42 @@ class NegativeOf(NonNode):
         return -self.expr.evaluate(context)
 
 
+class Model:
+    """A Model is a collection of Stocks and Flows with functionality for creating nodes
+    as well as solving the resulting system of ordinary differential equations.
+    """
+
+    def __init__(self):
+        self.stocks = []
+        self.flows = []
+
+    def stock(self, label: str):
+        """Create a new Stock and add it to this model.
+
+        >>> m = Model()
+        >>> m.stock("test")
+        Stock('test')
+        >>> m.stocks
+        [Stock('test')]
+        """
+        stock = Stock(label)
+        self.stocks.append(stock)
+        return stock
+
+    def flow(self, label: str, source: Node, sink: Node, value: ExpressionLike):
+        """Create a new Flow and add it to this model.
+
+        >>> m = Model()
+        >>> m.flow("flow", Stock("one"), Stock("two"), Constant(1) + 2)
+        Flow('flow', Stock('one'), Stock('two'), Sum(Constant(1), Constant(2)))
+        >>> m.flows
+        [Flow('flow', Stock('one'), Stock('two'), Sum(Constant(1), Constant(2)))]
+        """
+        flow = Flow(label, source, sink, value)
+        self.flows.append(flow)
+        return flow
+
+
 if __name__ == "__main__":
     import doctest
 
