@@ -1,4 +1,4 @@
-from typing import Mapping, Iterable, TypeVar, Dict, Set, Union
+from typing import Mapping, Iterable, TypeVar, Dict, Set, Union, Callable
 from collections import defaultdict
 from abc import ABC, abstractmethod
 
@@ -348,6 +348,39 @@ class Model:
         """
         deps = {node: node.dependencies_resolving_self for node in self.flows}
         yield from topological_sort(deps)
+
+    @property
+    def ode_func(self) -> Callable:
+        """Retrieve function for solving system of ordinary differential equations.
+
+        >>> m = Model()
+        >>> s1, s2 = m.stock("s1"), m.stock("s2")
+        >>> f1 = m.flow("f1", s1, s2, 1)
+        >>> f2 = m.flow("f2", s2, None, f1 - 0.5)
+        >>> list(m.evaluation_order) == [f1, f2]
+        True
+        >>> f = m.ode_func
+        >>> f([2, 3], 0)
+        [-1, 0.5]
+        """
+        eval_order = list(self.evaluation_order)
+        stock_idx = {stock: i for i, stock in enumerate(self.stocks)}
+
+        def func(y, t):
+            assert len(y) == len(self.stocks)
+            context = {stock: val for stock, val in zip(self.stocks, y)}
+            dy_dt = type(y)([0 for _ in y])
+            for node in eval_order:
+                val = node.evaluate(context)
+                if isinstance(node, Flow):
+                    if node.source:
+                        dy_dt[stock_idx[node.source]] -= val
+                    if node.sink:
+                        dy_dt[stock_idx[node.sink]] += val
+                context[node] = val
+            return dy_dt
+
+        return func
 
 
 if __name__ == "__main__":
