@@ -1,4 +1,5 @@
-from typing import Mapping, Iterable, TypeVar, Dict, Set
+from typing import Mapping, Iterable, TypeVar, Dict, Set, Union
+from numbers import Number
 from collections import defaultdict
 from abc import ABC, abstractmethod
 
@@ -78,7 +79,7 @@ class Expression(ABC):
         pass
 
     @abstractmethod
-    def evaluate(self, context: Mapping["Node", float]) -> float:
+    def evaluate(self, context: Mapping["Node", Number]) -> Number:
         pass
 
 
@@ -96,6 +97,20 @@ class NonNode(Expression):
     @property
     def dependencies_resolving_self(self) -> Iterable["Expression"]:
         return self.dependencies
+
+
+class Constant(NonNode):
+    """Constant value over time."""
+
+    def __init__(self, constant: Number):
+        self.constant = constant
+
+    @property
+    def dependencies(self) -> Iterable["Expression"]:
+        yield from ()
+
+    def evaluate(self, context: Mapping["Node", Number]) -> Number:
+        return self.constant
 
 
 if __name__ == "__main__":
