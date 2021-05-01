@@ -96,6 +96,8 @@ class Expression(ABC):
 
         >>> list((1 + Constant(2) - 3).dependencies)
         []
+        >>> list((1 + Constant(2) - Stock()).dependencies)
+        [Stock()]
         """
         pass
 
@@ -109,6 +111,9 @@ class Expression(ABC):
         """Evaluate expression in context.
 
         >>> float((1 + Constant(2) - 3).evaluate({}))
+        0.0
+        >>> s1, s2 = Stock(), Stock()
+        >>> float((s1 + 2 - s2).evaluate({s1: -1, s2: 1}))
         0.0
         """
         pass
@@ -168,6 +173,27 @@ class Node(Expression):
     @property
     def dependencies(self) -> Iterable["Expression"]:
         yield self
+
+
+class Stock(Node):
+    """A node representing a state to be observerd. Grows (or diminishes) with the flows
+    leading to it (or coming from it).
+
+    >>> Stock()
+    Stock()
+    """
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}()"
+
+    @property
+    def dependencies_resolving_self(self) -> Iterable["Expression"]:
+        return self.dependencies
+
+    def evaluate(self, context: Mapping["Node", float]) -> float:
+        # Stocks cannot be computed explicitly, their value is obtained by
+        # solving the system of ordinary differential equations defined by the model
+        return context[self]
 
 
 class NonNode(Expression):
