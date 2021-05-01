@@ -1,5 +1,4 @@
 from typing import Mapping, Iterable, TypeVar, Dict, Set, Union
-from numbers import Real
 from collections import defaultdict
 from abc import ABC, abstractmethod
 
@@ -65,7 +64,7 @@ def topological_sort(dag: Mapping[T, Iterable[T]]) -> Iterable[T]:
         raise ValueError(f"DAG contains a cycle related to {dag}")
 
 
-ExpressionLike = Union[Real, "Expression"]
+ExpressionLike = Union[int, float, "Expression"]
 
 
 class Expression(ABC):
@@ -85,7 +84,7 @@ class Expression(ABC):
         """
         if isinstance(o, Expression):
             return o
-        elif isinstance(o, Real):
+        elif isinstance(o, int) or isinstance(o, float):
             return Constant(o)
         else:
             raise TypeError(f"Cannot wrap '{o}' of type {type(o)} as expression")
@@ -101,7 +100,7 @@ class Expression(ABC):
         pass
 
     @abstractmethod
-    def evaluate(self, context: Mapping["Node", Real]) -> Real:
+    def evaluate(self, context: Mapping["Node", float]) -> float:
         pass
 
     def __neg__(self) -> "Expression":
@@ -132,7 +131,7 @@ class NonNode(Expression):
 class Constant(NonNode):
     """Constant value over time."""
 
-    def __init__(self, constant: Real):
+    def __init__(self, constant: float):
         self.constant = constant
 
     def __repr__(self):
@@ -142,7 +141,7 @@ class Constant(NonNode):
     def dependencies(self) -> Iterable["Expression"]:
         yield from ()
 
-    def evaluate(self, context: Mapping["Node", Real]) -> Real:
+    def evaluate(self, context: Mapping["Node", float]) -> float:
         return self.constant
 
 
@@ -159,7 +158,7 @@ class NegativeOf(NonNode):
     def dependencies(self) -> Iterable["Expression"]:
         yield from self.expr.dependencies
 
-    def evaluate(self, context: Mapping["Node", Real]) -> Real:
+    def evaluate(self, context: Mapping["Node", float]) -> float:
         return -self.expr.evaluate(context)
 
 
