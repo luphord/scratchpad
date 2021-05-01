@@ -104,6 +104,14 @@ class Expression(ABC):
     def evaluate(self, context: Mapping["Node", Real]) -> Real:
         pass
 
+    def __neg__(self) -> "Expression":
+        """Negative value of the given expression.
+
+        >>> -Constant(1)
+        NegativeOf(Constant(1))
+        """
+        return NegativeOf(self)
+
 
 class Node(Expression):
     """Abstract base class for all nodes."""
@@ -136,6 +144,23 @@ class Constant(NonNode):
 
     def evaluate(self, context: Mapping["Node", Real]) -> Real:
         return self.constant
+
+
+class NegativeOf(NonNode):
+    """Negative value of the given expression."""
+
+    def __init__(self, expr: ExpressionLike):
+        self.expr = Expression.wrap(expr)
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self.expr})"
+
+    @property
+    def dependencies(self) -> Iterable["Expression"]:
+        yield from self.expr.dependencies
+
+    def evaluate(self, context: Mapping["Node", Real]) -> Real:
+        return -self.expr.evaluate(context)
 
 
 if __name__ == "__main__":
