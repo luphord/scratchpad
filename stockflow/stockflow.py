@@ -65,11 +65,14 @@ def topological_sort(dag: Mapping[T, Iterable[T]]) -> Iterable[T]:
         raise ValueError(f"DAG contains a cycle related to {dag}")
 
 
+ExpressionLike = Union[Number, "Expression"]
+
+
 class Expression(ABC):
     """Abstract base class for all types of expressions including nodes."""
 
     @staticmethod
-    def wrap(o: Union[Number, "Expression"]) -> "Expression":
+    def wrap(o: ExpressionLike) -> "Expression":
         """Wrap a numeric value as a constant expression.
         Return the expression itself if it is already an instance of Expression
 
