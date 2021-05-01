@@ -131,6 +131,16 @@ class Expression(ABC):
         """
         return NegativeOf(self)
 
+    def __sub__(self, other: ExpressionLike) -> "Expression":
+        """Subtract other expression-like from self.
+
+        >>> Constant(1) - 2
+        Sum(Constant(1), NegativeOf(Constant(2)))
+        >>> Constant(1) - 2 - 3
+        Sum(Constant(1), NegativeOf(Constant(2)), NegativeOf(Constant(3)))
+        """
+        return Sum(self, NegativeOf(other))
+
 
 class Node(Expression):
     """Abstract base class for all nodes."""
