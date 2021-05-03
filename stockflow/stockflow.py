@@ -345,8 +345,12 @@ class Model:
         >>> f3 = m.flow(None, None, None, f1 + f2)
         >>> list(m.evaluation_order) == [f1, f2, f3]
         True
+        >>> m = Model()
+        >>> f1 = m.flow(None, None, None, Constant(1))
+        >>> list(m.evaluation_order) == [f1]
+        True
         """
-        deps = {node: node.dependencies_resolving_self for node in self.flows}
+        deps = {node: list(node.dependencies_resolving_self) for node in self.flows}
         yield from topological_sort(deps)
 
     @property
