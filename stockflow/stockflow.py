@@ -3,6 +3,7 @@ from collections import defaultdict
 from functools import reduce
 import operator
 from abc import ABC, abstractmethod
+import numpy as np
 
 
 T = TypeVar("T")
@@ -414,16 +415,16 @@ class Model:
         >>> list(m.evaluation_order) == [f1, f2]
         True
         >>> f = m.ode_func
-        >>> f([2, 3], 0)
-        [-1, 1.0]
+        >>> f(np.array([2, 3]), 0)
+        array([-1.,  1.])
         """
         eval_order = list(self.evaluation_order)
         stock_idx = {stock: i for i, stock in enumerate(self.stocks)}
 
-        def func(y, t):
+        def func(y: np.ndarray, t: np.ndarray) -> np.ndarray:
             assert len(y) == len(self.stocks)
             context = {stock: val for stock, val in zip(self.stocks, y)}
-            dy_dt = type(y)([0 for _ in y])
+            dy_dt = np.zeros(y.shape)
             for node in eval_order:
                 val = node.evaluate(context)
                 if isinstance(node, Flow):
