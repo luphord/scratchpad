@@ -410,12 +410,12 @@ class Model:
         >>> m = Model()
         >>> s1, s2 = m.stock("s1"), m.stock("s2")
         >>> f1 = m.flow("f1", s1, s2, 1)
-        >>> f2 = m.flow("f2", s2, None, f1 - 0.5)
+        >>> f2 = m.flow("f2", s2, None, 0.5 * f1 - 0.5)
         >>> list(m.evaluation_order) == [f1, f2]
         True
         >>> f = m.ode_func
         >>> f([2, 3], 0)
-        [-1, 0.5]
+        [-1, 1.0]
         """
         eval_order = list(self.evaluation_order)
         stock_idx = {stock: i for i, stock in enumerate(self.stocks)}
