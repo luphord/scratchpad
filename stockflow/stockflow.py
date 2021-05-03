@@ -168,6 +168,26 @@ class Expression(ABC):
         """
         return Sum(other, NegativeOf(self))
 
+    def __mul__(self, other: ExpressionLike) -> "Expression":
+        """Multiply other expression-like with self.
+
+        >>> Constant(1) * 2
+        Product(Constant(1), Constant(2))
+        >>> Constant(1) * 2 * 3
+        Product(Constant(1), Constant(2), Constant(3))
+        """
+        return Product(self, other)
+
+    def __rmul__(self, other: ExpressionLike) -> "Expression":
+        """Multiply other expression-like with self.
+
+        >>> 1 * Constant(2)
+        Product(Constant(1), Constant(2))
+        >>> 1 * Constant(2) * 3
+        Product(Constant(1), Constant(2), Constant(3))
+        """
+        return Product(other, self)
+
 
 class Node(Expression):
     """Abstract base class for all nodes."""
