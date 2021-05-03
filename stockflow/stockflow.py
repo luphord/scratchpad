@@ -1,5 +1,7 @@
 from typing import Mapping, Iterable, TypeVar, Dict, Set, Union, Callable
 from collections import defaultdict
+from functools import reduce
+import operator
 from abc import ABC, abstractmethod
 
 
@@ -298,6 +300,34 @@ class NegativeOf(NonNode):
 
     def evaluate(self, context: Mapping["Node", float]) -> float:
         return -self.expr.evaluate(context)
+
+
+class Product(NonNode):
+    """Product of multiple expressions."""
+
+    def __init__(self, *factors):
+        factors = [Expression.wrap(factor) for factor in factors]
+        self.factors = sum(
+            (s.factors if isinstance(s, Product) else [s] for s in factors), []
+        )
+
+    def __repr__(self):
+        args = ", ".join(repr(factor) for factor in self.factors)
+        return f"{self.__class__.__name__}({args})"
+
+    @property
+    def dependencies(self) -> Iterable["Expression"]:
+        for factor in self.factors:
+            yield from factor.dependencies
+
+    def evaluate(self, context: Mapping["Node", float]) -> float:
+        return float(
+            reduce(
+                operator.mul,
+                (factor.evaluate(context) for factor in self.factors),
+                1,
+            )
+        )
 
 
 class Model:
