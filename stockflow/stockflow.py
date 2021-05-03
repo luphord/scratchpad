@@ -405,7 +405,7 @@ class Model:
         yield from topological_sort(deps)
 
     @property
-    def ode_func(self) -> Callable:
+    def ode_func(self) -> Callable[[np.ndarray, np.ndarray], np.ndarray]:
         """Retrieve function for solving system of ordinary differential equations.
 
         >>> m = Model()
