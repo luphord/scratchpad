@@ -9,9 +9,9 @@ using Statistics
 
 # ╔═╡ 51869554-3412-11ec-37cd-9dfcf79c8a92
 mutable struct FruitGardenState
-	raven::Int
-	fruits::Array{Int}
-	rounds::Int
+	raven::Int8
+	fruits::Array{Int8}
+	rounds::Int16
 end
 
 # ╔═╡ 9ef9b517-5a0d-41da-a8ab-2a2919f09a91
