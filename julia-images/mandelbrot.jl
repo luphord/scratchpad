@@ -7,17 +7,9 @@ using InteractiveUtils
 # ╔═╡ ceef8cea-4a21-11ec-13e1-7d5e4abefcd4
 using Images
 
-# ╔═╡ e19311f0-6d72-4c43-b9fa-c7e64459cd8f
-begin
-	maxiter = 20
-	threshold = 50
-	center = -0.63 + 0im
-	width = 3.2
-end
-
 # ╔═╡ b791724f-2d08-451f-b9f3-b02ed5e00e47
-begin
-	img = ones(RGB{Float32}, 400, 400)
+function mandelbrot(width_pixels::Int, height_pixels::Int; maxiter=20, threshold=50, center=-0.63 + 0im, width=3.2)
+	img = ones(RGB{Float32}, height_pixels, width_pixels)
 	rows, cols = size(img)
 	height = width * rows / cols
 	upperleft = center - width / 2 + height / 2 * im
@@ -36,6 +28,9 @@ begin
 	end
 	img
 end
+
+# ╔═╡ e19311f0-6d72-4c43-b9fa-c7e64459cd8f
+mandelbrot(400, 400)
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -771,7 +766,7 @@ uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 
 # ╔═╡ Cell order:
 # ╠═ceef8cea-4a21-11ec-13e1-7d5e4abefcd4
-# ╠═e19311f0-6d72-4c43-b9fa-c7e64459cd8f
 # ╠═b791724f-2d08-451f-b9f3-b02ed5e00e47
+# ╠═e19311f0-6d72-4c43-b9fa-c7e64459cd8f
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
