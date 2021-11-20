@@ -10,16 +10,16 @@ using Images
 # ╔═╡ e19311f0-6d72-4c43-b9fa-c7e64459cd8f
 begin
 	threshold = 50
-	upperleft = -2.2 + 1.3im
-	lowerright = 0.7 - 1.3im
+	center = -0.75 + 0im
+	width = 3
 end
 
 # ╔═╡ b791724f-2d08-451f-b9f3-b02ed5e00e47
 begin
-	img = ones(RGB{Float32}, 200, 300)
-	width = real(lowerright - upperleft)
-	height = imag(upperleft - lowerright)
+	img = ones(RGB{Float32}, 300, 400)
 	rows, cols = size(img)
+	height = width * rows / cols
+	upperleft = center - width / 2 + height / 2 * im
 	for col in 1:cols
 		for row in 1:rows
 			c = upperleft + col / cols * width - row / rows * height * im
