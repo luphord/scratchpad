@@ -10,8 +10,8 @@ using Images
 # ╔═╡ e19311f0-6d72-4c43-b9fa-c7e64459cd8f
 begin
 	threshold = 50
-	upperleft = -2 + 1.12im
-	lowerright = 0.5 - 1.12im
+	upperleft = -2.2 + 1.3im
+	lowerright = 0.7 - 1.3im
 end
 
 # ╔═╡ b791724f-2d08-451f-b9f3-b02ed5e00e47
