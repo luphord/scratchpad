@@ -10,13 +10,13 @@ using Images
 # ╔═╡ e19311f0-6d72-4c43-b9fa-c7e64459cd8f
 begin
 	threshold = 50
-	center = -0.75 + 0im
-	width = 3
+	center = -0.63 + 0im
+	width = 3.2
 end
 
 # ╔═╡ b791724f-2d08-451f-b9f3-b02ed5e00e47
 begin
-	img = ones(RGB{Float32}, 300, 400)
+	img = ones(RGB{Float32}, 400, 400)
 	rows, cols = size(img)
 	height = width * rows / cols
 	upperleft = center - width / 2 + height / 2 * im
