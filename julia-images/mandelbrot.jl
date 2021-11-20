@@ -4,6 +4,15 @@
 using Markdown
 using InteractiveUtils
 
+# This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
+macro bind(def, element)
+    quote
+        local el = $(esc(element))
+        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : missing
+        el
+    end
+end
+
 # ╔═╡ ceef8cea-4a21-11ec-13e1-7d5e4abefcd4
 using Images
 
@@ -29,8 +38,14 @@ function mandelbrot(colorize::Function, width_pixels::Int, height_pixels::Int; m
 	img
 end
 
+# ╔═╡ 2047e2c7-afe2-4451-b2bf-b6a1eace30b2
+@bind threshold html"<input name=threshold type=number value=20 min=1 max=100><label for=threshold> Threshold</label>"
+
+# ╔═╡ 3b8f6b5c-aae8-45d4-9db2-6e0bd9c0cf0a
+@bind maxiter html"<input name=maxiter type=number value=50 min=1 max=1000><label for=maxiter> Max. Iterations</label>"
+
 # ╔═╡ e19311f0-6d72-4c43-b9fa-c7e64459cd8f
-mandelbrot(400, 300) do x
+mandelbrot(400, 300, maxiter=maxiter, threshold=threshold) do x
 	RGB(1-cos(x * 11π), 1-cos(x * 2π), 1-cos(x * 7π))
 end
 
@@ -770,5 +785,7 @@ uuid = "3f19e933-33d8-53b3-aaab-bd5110c3b7a0"
 # ╠═ceef8cea-4a21-11ec-13e1-7d5e4abefcd4
 # ╠═b791724f-2d08-451f-b9f3-b02ed5e00e47
 # ╠═e19311f0-6d72-4c43-b9fa-c7e64459cd8f
+# ╟─2047e2c7-afe2-4451-b2bf-b6a1eace30b2
+# ╟─3b8f6b5c-aae8-45d4-9db2-6e0bd9c0cf0a
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
