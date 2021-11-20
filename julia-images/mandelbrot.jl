@@ -8,8 +8,8 @@ using InteractiveUtils
 using Images
 
 # ╔═╡ b791724f-2d08-451f-b9f3-b02ed5e00e47
-function mandelbrot(width_pixels::Int, height_pixels::Int; maxiter=20, threshold=50, center=-0.63 + 0im, width=3.2)
-	img = ones(RGB{Float32}, height_pixels, width_pixels)
+function mandelbrot(width_pixels::Int, height_pixels::Int; maxiter=50, threshold=100, center=-0.63 + 0im, width=3.2)
+	img = zeros(RGB{Float32}, height_pixels, width_pixels)
 	rows, cols = size(img)
 	height = width * rows / cols
 	upperleft = center - width / 2 + height / 2 * im
@@ -20,7 +20,7 @@ function mandelbrot(width_pixels::Int, height_pixels::Int; maxiter=20, threshold
 			for i in 1:maxiter
 				z = z^2 + c
 				if abs2(z) > threshold
-					img[row, col] = i / maxiter
+					img[row, col] = 1 - i / maxiter
 					break
 				end
 			end
@@ -30,7 +30,7 @@ function mandelbrot(width_pixels::Int, height_pixels::Int; maxiter=20, threshold
 end
 
 # ╔═╡ e19311f0-6d72-4c43-b9fa-c7e64459cd8f
-mandelbrot(400, 400)
+mandelbrot(400, 300)
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
