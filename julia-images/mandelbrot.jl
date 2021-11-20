@@ -27,7 +27,8 @@ begin
 			for i in 1:20
 				z = z^2 + c
 				if abs2(z) > threshold
-					img[row, col] = 1 - i / 20
+					img[row, col] = i / 20
+					break
 				end
 			end
 		end
