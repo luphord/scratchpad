@@ -9,6 +9,7 @@ using Images
 
 # ╔═╡ e19311f0-6d72-4c43-b9fa-c7e64459cd8f
 begin
+	maxiter = 20
 	threshold = 50
 	center = -0.63 + 0im
 	width = 3.2
@@ -24,10 +25,10 @@ begin
 		for row in 1:rows
 			c = upperleft + col / cols * width - row / rows * height * im
 			z = 0
-			for i in 1:20
+			for i in 1:maxiter
 				z = z^2 + c
 				if abs2(z) > threshold
-					img[row, col] = i / 20
+					img[row, col] = i / maxiter
 					break
 				end
 			end
