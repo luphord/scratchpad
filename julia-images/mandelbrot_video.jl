@@ -24,9 +24,9 @@ end
 let
     local center = -0.743643887037158704752191506114774 + 0.131825904205311970493132056385139im
     local initialwidth = 3.5
-    local finalwidth = 1e-4
+    local finalwidth = 1e-10
     local zoom = (x) -> (1 - exp(-10x)) / (1 - exp(-10))
-    local nframes = 2000
+    local nframes = 4000
     encoder_options = (crf = 23, preset = "medium")
     framerate = 25
     frame = function (i)
