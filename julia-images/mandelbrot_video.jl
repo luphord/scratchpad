@@ -5,7 +5,7 @@ function mandelbrot(colorize::Function, width_pixels::Int, height_pixels::Int; m
     rows, cols = size(img)
     height = width * rows / cols
     upperleft = center - width / 2 + height / 2 * im
-    for col = 1:cols
+    Threads.@threads for col = 1:cols
         for row = 1:rows
             c = upperleft + col / cols * width - row / rows * height * im
             z = 0
