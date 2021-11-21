@@ -25,13 +25,14 @@ let
     local center = -0.743643887037158704752191506114774 + 0.131825904205311970493132056385139im
     local initialwidth = 3.5
     local finalwidth = 1e-4
-    local nframes = 100
-    local shrinkrate = 1e-2
+    local zoom = (x) -> (1 - exp(-10x)) / (1 - exp(-10))
+    local nframes = 2000
     encoder_options = (crf = 23, preset = "medium")
     framerate = 25
     frame = function (i)
-        width = finalwidth + (initialwidth - finalwidth) * (1 - shrinkrate)^(i - 1)
-        mandelbrot(1920, 1080, maxiter = 50, threshold = 100, center = center, width = width) do x
+        α = zoom((i - 1) / (nframes - 1))
+        width = α * finalwidth + (1 - α) * initialwidth
+        mandelbrot(1920, 1080, maxiter = 200, threshold = 200, center = center, width = width) do x
             RGB{N0f8}((1 - cos(x * 11π)) / 2, (1 - cos(x * 2π)) / 2, (1 - cos(x * 7π)) / 2)
         end
     end
