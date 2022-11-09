@@ -109,6 +109,16 @@ class button(HTMLElement):
     render_compact = True
 
 
+class details(HTMLElement):
+    tag = "details"
+    render_compact = False
+
+
+class dialog(HTMLElement):
+    tag = "dialog"
+    render_compact = False
+
+
 class div(HTMLElement):
     tag = "div"
     render_compact = False
@@ -184,6 +194,11 @@ class meta(HTMLElement):
     render_compact = False
 
 
+class menu(HTMLElement):
+    tag = "menu"
+    render_compact = False
+
+
 class nav(HTMLElement):
     tag = "nav"
     render_compact = False
@@ -211,6 +226,11 @@ class span(HTMLElement):
 
 class style(HTMLElement):
     tag = "style"
+    render_compact = False
+
+
+class summary(HTMLElement):
+    tag = "summary"
     render_compact = False
 
 
