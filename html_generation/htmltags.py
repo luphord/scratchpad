@@ -28,13 +28,16 @@ class HTMLElement(object):
         self.content.append(item)
         return item
 
+    def escape(self, s):
+        return escape(s, quote=True)
+
     def lazy_render_attributes(self) -> Iterable[str]:
         if self.attributes:
             for k, v in self.attributes.items():
                 yield " "
-                yield str(escape(k))
+                yield str(self.escape(k))
                 yield '="'
-                yield str(escape(v))
+                yield str(self.escape(v))
                 yield '"'
 
     def lazy_render(self, indent: str = "", add_indent: str = "") -> Iterable[str]:
@@ -56,7 +59,7 @@ class HTMLElement(object):
             if isinstance(child, HTMLElement):
                 yield from child.lazy_render(child_indent, add_indent)
             else:
-                yield f"{child_indent}{escape(child)}"
+                yield f"{child_indent}{self.escape(child)}"
             if do_linebreak:
                 yield "\n"
         if do_linebreak:
@@ -212,6 +215,14 @@ class ol(HTMLElement):
 class p(HTMLElement):
     tag = "p"
     render_compact = True
+
+
+class script(HTMLElement):
+    tag = "script"
+    render_compact = True
+
+    def escape(self, s):
+        return s
 
 
 class small(HTMLElement):
