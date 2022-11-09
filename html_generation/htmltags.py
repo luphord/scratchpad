@@ -1,4 +1,5 @@
 from typing import Iterable, Union
+from html import escape
 
 HTMLContent = Union["HTMLElement", str]
 
@@ -31,9 +32,9 @@ class HTMLElement(object):
         if self.attributes:
             for k, v in self.attributes.items():
                 yield " "
-                yield str(k)
+                yield str(escape(k))
                 yield '="'
-                yield str(v)
+                yield str(escape(v))
                 yield '"'
 
     def lazy_render(self, indent: str = "", add_indent: str = "") -> Iterable[str]:
@@ -55,7 +56,7 @@ class HTMLElement(object):
             if isinstance(child, HTMLElement):
                 yield from child.lazy_render(child_indent, add_indent)
             else:
-                yield "{}{}".format(child_indent, child)
+                yield f"{child_indent}{escape(child)}"
             if do_linebreak:
                 yield "\n"
         if do_linebreak:
