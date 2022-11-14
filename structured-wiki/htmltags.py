@@ -35,7 +35,7 @@ class HTMLElement(object):
         if self.attributes:
             for k, v in self.attributes.items():
                 yield " "
-                yield str(self.escape(k))
+                yield str(self.escape(k)).replace("_", "-")
                 yield '="'
                 yield str(self.escape(v))
                 yield '"'
