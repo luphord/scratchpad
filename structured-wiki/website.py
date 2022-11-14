@@ -26,8 +26,8 @@ def home_page(greeting):
 def watercss():
     return static_file("water.css", root=Path(__file__).parent / "assets/css")
 
-@route('/hello')
-def hello():
-    return str(home_page("hi there!"))
+@route('/hello/<name>')
+def hello(name):
+    return str(home_page(f"hi {name}!"))
 
 run(host='localhost', port=8080, debug=True, reloader=True)
