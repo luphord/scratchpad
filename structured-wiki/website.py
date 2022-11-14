@@ -11,6 +11,9 @@ water_css = link(
 
 htmx_src = script(src=htmx_path)
 
+def replaceable_button(url="/removed", content="Click me to remove"):
+    return button(content, hx_trigger="click", hx_swap="outerHTML", hx_get=url)
+
 def home_page(greeting):
     return html(
         head(title("A Test of HTML generation"), water_css),
@@ -21,6 +24,7 @@ def home_page(greeting):
                 p("It's just leeeeeeeeeeeeeeeeeeeeeeeengthy text"),
             ),
             p(greeting),
+            replaceable_button(),
             div('<script>alert("evil!")</script>', id="mydiv"),
             htmx_src
         ),
@@ -37,5 +41,9 @@ def htmx():
 @route('/hello/<name>')
 def hello(name):
     return str(home_page(f"hi {name}!"))
+
+@route('/removed')
+def hello():
+    return str(p("You got replaced!"))
 
 run(host='localhost', port=8080, debug=True, reloader=True)
