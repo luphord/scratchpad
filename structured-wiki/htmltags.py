@@ -102,6 +102,11 @@ class article(HTMLElement):
     render_compact = False
 
 
+class b(HTMLElement):
+    tag = "b"
+    render_compact = False
+
+
 class body(HTMLElement):
     tag = "body"
     render_compact = False
@@ -110,6 +115,11 @@ class body(HTMLElement):
 class button(HTMLElement):
     tag = "button"
     render_compact = True
+
+
+class code(HTMLElement):
+    tag = "code"
+    render_compact = False
 
 
 class details(HTMLElement):
@@ -177,6 +187,11 @@ class html(HTMLElement):
     render_compact = False
 
 
+class i(HTMLElement):
+    tag = "i"
+    render_compact = False
+
+
 class img(HTMLElement):
     tag = "img"
     render_compact = False
@@ -219,6 +234,11 @@ class ol(HTMLElement):
 
 class p(HTMLElement):
     tag = "p"
+    render_compact = True
+
+
+class pre(HTMLElement):
+    tag = "pre"
     render_compact = True
 
 
