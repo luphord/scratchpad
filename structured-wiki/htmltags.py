@@ -35,7 +35,7 @@ class HTMLElement(object):
         if self.attributes:
             for k, v in self.attributes.items():
                 yield " "
-                yield str(self.escape(k)).replace("_", "-")
+                yield str(self.escape(k)).replace("class_", "class").replace("_", "-")
                 yield '="'
                 yield str(self.escape(v))
                 yield '"'
@@ -192,6 +192,11 @@ class link(HTMLElement):
     render_compact = False
 
 
+class main(HTMLElement):
+    tag = "main"
+    render_compact = False
+
+
 class meta(HTMLElement):
     tag = "meta"
     render_compact = False
@@ -223,6 +228,11 @@ class script(HTMLElement):
 
     def escape(self, s):
         return s
+
+
+class section(HTMLElement):
+    tag = "section"
+    render_compact = False
 
 
 class small(HTMLElement):
