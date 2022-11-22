@@ -1,6 +1,6 @@
 from pathlib import Path
 from uuid import uuid4
-from bottle import route, static_file, run
+from bottle import Bottle, request, static_file
 from htmltags import *
 
 bulma_css_path = "/static/css/bulma.min.css"
@@ -53,13 +53,16 @@ def home_page(greeting):
     )
 
 
-@route("/static/<path:path>")
+myapp = Bottle()
+
+
+@myapp.route("/static/<path:path>")
 def static_files(path):
     return static_file(path, root=Path(__file__).parent / "assets")
 
 
-@route("/")
-@route("/hello/<name>")
+@myapp.route("/")
+@myapp.route("/hello/<name>")
 def hello(name="anonymous"):
     return home_page(f"hi {name}!")
 
@@ -67,7 +70,7 @@ def hello(name="anonymous"):
 remove_count = 0
 
 
-@route("/removed/<id>")
+@myapp.route("/removed/<id>")
 def hello(id):
     global remove_count
     remove_count += 1
@@ -84,7 +87,8 @@ def hello(id):
         ),
         div(
             "This replacement was triggered by a button click "
-            f"and executed via htmx {remove_count} times. The content was sent by the server.",
+            f"and executed via htmx {remove_count} times. The content was sent by the server."
+            f" Route is {vars(request['bottle.route'])}",
             class_="message-body",
         ),
         class_="message",
@@ -92,4 +96,5 @@ def hello(id):
     )
 
 
-run(host="localhost", port=8080, debug=True, reloader=True)
+print(f"{id(myapp):0x}")
+myapp.run(host="localhost", port=8080, debug=True, reloader=True)
