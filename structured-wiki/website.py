@@ -1,4 +1,5 @@
 from pathlib import Path
+from uuid import uuid4
 from bottle import route, static_file, run
 from htmltags import *
 
@@ -43,7 +44,7 @@ def home_page(greeting):
                     class_="box",
                 ),
                 p(greeting, class_="box"),
-                replaceable_button(f"/removed/myid"),
+                replaceable_button(f"/removed/{uuid4()}"),
                 div('<script>alert("evil!")</script>', id="mydiv", class_="box"),
                 htmx_src,
                 class_="container",
@@ -80,7 +81,7 @@ def hello(id):
                 p("You got replaced!"),
                 button(
                     class_="delete",
-                    hx_target=f"#{id}",
+                    hx_target=f"#my{id}",
                     hx_trigger="click",
                     hx_get=f"/removed/{id}",
                 ),
@@ -92,7 +93,7 @@ def hello(id):
                 class_="message-body",
             ),
             class_="message",
-            id=id,
+            id=f"my{id}",
         )
     )
 
