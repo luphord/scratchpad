@@ -53,14 +53,9 @@ def home_page(greeting):
     )
 
 
-@route(bulma_css_path)
-def bulmacss():
-    return static_file("bulma.min.css", root=Path(__file__).parent / "assets/css")
-
-
-@route(htmx_path)
-def htmx():
-    return static_file("htmx.min.js", root=Path(__file__).parent / "assets/js")
+@route("/static/<path:path>")
+def static_files(path):
+    return static_file(path, root=Path(__file__).parent / "assets")
 
 
 @route("/")
