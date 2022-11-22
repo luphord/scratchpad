@@ -61,7 +61,7 @@ def static_files(path):
 @route("/")
 @route("/hello/<name>")
 def hello(name="anonymous"):
-    return str(home_page(f"hi {name}!"))
+    return home_page(f"hi {name}!")
 
 
 remove_count = 0
@@ -71,26 +71,24 @@ remove_count = 0
 def hello(id):
     global remove_count
     remove_count += 1
-    return str(
-        article(
-            div(
-                p("You got replaced!"),
-                button(
-                    class_="delete",
-                    hx_target=f"#my{id}",
-                    hx_trigger="click",
-                    hx_get=f"/removed/{id}",
-                ),
-                class_="message-header",
+    return article(
+        div(
+            p("You got replaced!"),
+            button(
+                class_="delete",
+                hx_target=f"#my{id}",
+                hx_trigger="click",
+                hx_get=f"/removed/{id}",
             ),
-            div(
-                "This replacement was triggered by a button click "
-                f"and executed via htmx {remove_count} times. The content was sent by the server.",
-                class_="message-body",
-            ),
-            class_="message",
-            id=f"my{id}",
-        )
+            class_="message-header",
+        ),
+        div(
+            "This replacement was triggered by a button click "
+            f"and executed via htmx {remove_count} times. The content was sent by the server.",
+            class_="message-body",
+        ),
+        class_="message",
+        id=f"my{id}",
     )
 
 

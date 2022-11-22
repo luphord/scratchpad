@@ -70,6 +70,9 @@ class HTMLElement(object):
         if is_doc_root:
             yield "\n"
 
+    def __iter__(self):
+        yield from self.lazy_render()
+
     def __str__(self) -> str:
         """Render element to string.
         >>> str(a('Somewhere', href="#"))
