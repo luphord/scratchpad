@@ -11,13 +11,32 @@ bulma_css = link(
 
 htmx_src = script(src=htmx_path)
 
+def navbar(brand_content, items):
+    brand = div(
+        a(
+            brand_content,
+            href="/",
+            class_="navbar-item"),
+        _class="navbar-brand")
+    links = div(
+        div(
+            *[a(item, class_="navbar-item") for item in items],
+            class_="navbar-start"),
+        div(a("Login", class_="navbar-item"), class_="navbar-end"),
+        _class="navbar-menu")
+    return nav(
+        brand,
+        links,
+        class_="navbar is-fixed-top is-info")
+
 def replaceable_button(url="/removed", content="Click me to remove"):
-    return button(content, hx_trigger="click", hx_swap="outerHTML", hx_get=url, class_="button is-primary")
+    return button(content, hx_trigger="click", hx_swap="outerHTML", hx_get=url, class_="button is-info")
 
 def home_page(greeting):
     return html(
         head(title("A Test of HTML generation"), bulma_css),
         body(
+            navbar("My Page", ["First", "Second", "Third"]),
             main(
                 h1("A Test of HTML generation", class_="title"),
                 details(
