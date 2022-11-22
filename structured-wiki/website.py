@@ -63,8 +63,9 @@ def htmx():
     return static_file("htmx.min.js", root=Path(__file__).parent / "assets/js")
 
 
+@route("/")
 @route("/hello/<name>")
-def hello(name):
+def hello(name="anonymous"):
     return str(home_page(f"hi {name}!"))
 
 
