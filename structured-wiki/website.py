@@ -20,7 +20,7 @@ def navbar(brand_content, items):
     return nav(brand, links, class_="navbar is-fixed-top is-info")
 
 
-def replaceable_button(url="/removed", content="Click me to remove"):
+def replaceable_button(url, content="Click me to remove"):
     return button(
         content,
         hx_trigger="click",
@@ -43,7 +43,7 @@ def home_page(greeting):
                     class_="box",
                 ),
                 p(greeting, class_="box"),
-                replaceable_button(),
+                replaceable_button(f"/removed/myid"),
                 div('<script>alert("evil!")</script>', id="mydiv", class_="box"),
                 htmx_src,
                 class_="container",
@@ -67,9 +67,34 @@ def hello(name):
     return str(home_page(f"hi {name}!"))
 
 
-@route("/removed")
-def hello():
-    return str(p("You got replaced!", class_="notification"))
+remove_count = 0
+
+
+@route("/removed/<id>")
+def hello(id):
+    global remove_count
+    remove_count += 1
+    return str(
+        article(
+            div(
+                p("You got replaced!"),
+                button(
+                    class_="delete",
+                    hx_target=f"#{id}",
+                    hx_trigger="click",
+                    hx_get=f"/removed/{id}",
+                ),
+                class_="message-header",
+            ),
+            div(
+                "This replacement was triggered by a button click "
+                f"and executed via htmx {remove_count} times. The content was sent by the server.",
+                class_="message-body",
+            ),
+            class_="message",
+            id=id,
+        )
+    )
 
 
 run(host="localhost", port=8080, debug=True, reloader=True)
