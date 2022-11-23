@@ -1,4 +1,6 @@
 from pathlib import Path
+from collections import Counter
+import random
 from uuid import uuid4
 from bottle import Bottle, request, static_file
 from htmltags import *
@@ -31,6 +33,38 @@ def replaceable_button(url, content="Click me to remove"):
     )
 
 
+def random_client_id():
+    return f"dom-{random.getrandbits(8*8):0x}"
+
+
+counts = Counter()
+
+
+def counter(prefix, server_id, dom_id, do_increment):
+    global counts
+    if do_increment:
+        counts[server_id] += 1
+    return div(
+        div(
+            div(f"Count of '{server_id}' is {counts[server_id]}", class_="box"),
+            class_="column is-three-quarters",
+        ),
+        div(
+            button(
+                "Increment",
+                hx_trigger="click",
+                hx_swap="outerHTML",
+                hx_target=f"#{dom_id}",
+                hx_put=f"{prefix}/{server_id}",
+                class_="button is-info",
+            ),
+            class_="column is-one-quarter",
+        ),
+        class_="columns",
+        id=dom_id,
+    )
+
+
 def home_page(greeting):
     return html(
         head(title("A Test of HTML generation"), bulma_css),
@@ -38,6 +72,9 @@ def home_page(greeting):
             navbar("My Page", ["First", "Second", "Third"]),
             main(
                 h1("A Test of HTML generation", class_="title"),
+                div(hx_trigger="load", hx_swap="outerHTML", hx_get="/counter/first"),
+                div(hx_trigger="load", hx_swap="outerHTML", hx_get="/counter/second"),
+                div(hx_trigger="load", hx_swap="outerHTML", hx_get="/counter/first"),
                 details(
                     summary("What could be down below?"),
                     p("It's just leeeeeeeeeeeeeeeeeeeeeeeengthy text"),
@@ -65,6 +102,16 @@ def static_files(path):
 @myapp.route("/hello/<name>")
 def hello(name="anonymous"):
     return home_page(f"hi {name}!")
+
+
+@myapp.get("/counter/<id>")
+def get_counter(id):
+    return counter("/counter", id, random_client_id(), False)
+
+
+@myapp.put("/counter/<id>")
+def increment_counter(id):
+    return counter("/counter", id, random_client_id(), True)
 
 
 remove_count = 0
