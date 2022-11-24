@@ -40,7 +40,7 @@ def random_client_id():
 counts = Counter()
 
 
-def counter(prefix, server_id, dom_id, do_increment):
+def counter(prefix, server_id, do_increment):
     global counts
     if do_increment:
         counts[server_id] += 1
@@ -54,14 +54,13 @@ def counter(prefix, server_id, dom_id, do_increment):
                 "Increment",
                 hx_trigger="click",
                 hx_swap="outerHTML",
-                hx_target=f"#{dom_id}",
                 hx_put=f"{prefix}/{server_id}",
                 class_="button is-info",
             ),
             class_="column is-one-quarter",
         ),
         class_="columns",
-        id=dom_id,
+        hx_target="this",
     )
 
 
@@ -106,12 +105,12 @@ def hello(name="anonymous"):
 
 @myapp.get("/counter/<id>")
 def get_counter(id):
-    return counter("/counter", id, random_client_id(), False)
+    return counter("/counter", id, False)
 
 
 @myapp.put("/counter/<id>")
 def increment_counter(id):
-    return counter("/counter", id, random_client_id(), True)
+    return counter("/counter", id, True)
 
 
 remove_count = 0
