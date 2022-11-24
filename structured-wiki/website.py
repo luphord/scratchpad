@@ -1,6 +1,7 @@
 from pathlib import Path
 from collections import Counter
 import random
+from datetime import datetime
 from uuid import uuid4
 from bottle import Bottle, request, static_file
 from htmltags import *
@@ -64,6 +65,25 @@ def counter(prefix, server_id, do_increment):
     )
 
 
+def console_window(url):
+    return div(
+        div(id="lines", class_="box"),
+        div(
+            input(
+                name="line",
+                type="text",
+                placeholder="Type some text and press enter...",
+                hx_trigger="keydown[key=='Enter']",
+                hx_post=url,
+                hx_target="#lines",
+                hx_swap="beforeend",
+                class_="input",
+            ),
+        ),
+        class_="box",
+    )
+
+
 def home_page(greeting):
     return html(
         head(title("A Test of HTML generation"), bulma_css),
@@ -74,6 +94,7 @@ def home_page(greeting):
                 div(hx_trigger="load", hx_swap="outerHTML", hx_get="/counter/first"),
                 div(hx_trigger="load", hx_swap="outerHTML", hx_get="/counter/second"),
                 div(hx_trigger="load", hx_swap="outerHTML", hx_get="/counter/first"),
+                console_window("/line"),
                 details(
                     summary("What could be down below?"),
                     p("It's just leeeeeeeeeeeeeeeeeeeeeeeengthy text"),
@@ -111,6 +132,11 @@ def get_counter(id):
 @myapp.put("/counter/<id>")
 def increment_counter(id):
     return counter("/counter", id, True)
+
+
+@myapp.post("/line")
+def line():
+    return p(f"{datetime.now()} >>> {request.forms.get('line')}")
 
 
 remove_count = 0
