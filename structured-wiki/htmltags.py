@@ -195,6 +195,11 @@ class i(HTMLElement):
     render_compact = False
 
 
+class input(HTMLElement):
+    tag = "input"
+    render_compact = False
+
+
 class img(HTMLElement):
     tag = "img"
     render_compact = False
