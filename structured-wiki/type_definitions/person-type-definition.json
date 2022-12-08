@@ -1,0 +1,20 @@
+{
+    "type": "form",
+    "fields": [
+        {
+            "type": "text",
+            "name": "firstName",
+            "label": "First Name"
+        },
+        {
+            "type": "text",
+            "name": "lastName",
+            "label": "Last Name"
+        },
+        {
+            "type": "date",
+            "name": "dateOfBirth",
+            "label": "Date of Birth"
+        }
+    ]
+}
